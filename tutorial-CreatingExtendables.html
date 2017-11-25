@@ -119,14 +119,47 @@ module.exports = class extends Extendable {
 		enabled: true, // default true
 		klasa: false // default false	
 	);
-}
+} 
 </code></pre>
-<ul>
-<li><strong>appliesTo</strong>: An array of affected classes from Discord.js or Klasa. You can find all extendable classes for <a href="https://github.com/hydrabolt/discord.js/blob/master/src/index.js">Discord.js</a> and <a href="https://github.com/dirigeants/klasa/blob/master/src/index.js">Klasa</a> in those respective links.</li>
-<li><strong>options.name</strong>: The name of the method/property.</li>
-<li><strong>options.enabled</strong>: If the extendable should be enabled on start, can be toggled with enable/disable commands.</li>
-<li><strong>options.klasa</strong>: If the extendable should target Klasa's classes instead of Discord.js's.</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>options.name</strong></td>
+<td><code>theFileName</code></td>
+<td>string</td>
+<td>The name of the method/property</td>
+</tr>
+<tr>
+<td><strong>options.enabled</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>If the extendable is enabled or not</td>
+</tr>
+<tr>
+<td><strong>options.klasa</strong></td>
+<td><code>false</code></td>
+<td>boolean</td>
+<td>If the extendable is for Klasa instead of Discord.js</td>
+</tr>
+<tr>
+<td><strong>appliesTo</strong></td>
+<td><code>[]</code></td>
+<td>Array</td>
+<td>An array of affected classes from Discord.js or Klasa.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>You can find all extendable classes for <a href="https://github.com/hydrabolt/discord.js/blob/master/src/index.js">Discord.js</a> and <a href="https://github.com/dirigeants/klasa/blob/master/src/index.js">Klasa</a> in those respective links.</p>
+</blockquote>
 <h2>Understanding extend</h2>
 <p>The extend method can only be a setter, getter, or method. You cannot define multiple in one file as the above example may imply.</p>
 <h2>Examples</h2>

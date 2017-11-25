@@ -95,7 +95,8 @@ module.exports = class extends Monitor {
 			name: 'yourMonitorName',
 			enabled: true,
 			ignoreBots: true,
-			ignoreSelf: true
+			ignoreSelf: true,
+			ignoreOthers: true
 		});
 	}
 
@@ -110,11 +111,48 @@ module.exports = class extends Monitor {
 };
 </code></pre>
 <h2>Configuration</h2>
-<ul>
-<li><strong>enabled</strong>: Represents if the inhibitor should be enabled or disabled, it must be a boolean. Set to false to completely disable this monitor.</li>
-<li><strong>ignoreBots</strong>: Set this to true if you want the monitor to ignore bots.</li>
-<li><strong>ignoreSelf</strong>: Set this to true if you want the monitor to ignore the client user (the bot account, yourself if it's a selfbot).</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>name</strong></td>
+<td><code>theFileName</code></td>
+<td>string</td>
+<td>The name of the monitor</td>
+</tr>
+<tr>
+<td><strong>enabled</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>Whether the monitor is enabled or not</td>
+</tr>
+<tr>
+<td><strong>ignoreBots</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>Whether the monitor ignores bots or not</td>
+</tr>
+<tr>
+<td><strong>ignoreSelf</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>Whether the monitor ignores itself or not</td>
+</tr>
+<tr>
+<td><strong>ignoreOthers</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>Whether the monitor ignores others or not</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>As with all other pieces, you can omit any optional Configuration that match the default values.</p>
 </blockquote>

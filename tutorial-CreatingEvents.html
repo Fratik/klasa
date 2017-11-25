@@ -100,10 +100,30 @@ module.exports = class extends Event {
 </code></pre>
 <p>Where <code>...params</code> are arguments you would <em>normally</em> get from those events. For example, while the <code>ready</code> event would only have none, the <code>guildMemberAdd</code> event would be <code>member</code>.</p>
 <h2>Configuration</h2>
-<ul>
-<li><strong>name</strong>: <code>default: TheFileName</code> <code>type: string</code> the name of the event.</li>
-<li><strong>enabled</strong>: <code>default: true</code> <code>type: boolean</code>  whether the event is enabled or not.</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>name</strong></td>
+<td><code>theFileName</code></td>
+<td>string</td>
+<td>The name of the event</td>
+</tr>
+<tr>
+<td><strong>enabled</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>Whether the event is enabled or not</td>
+</tr>
+</tbody>
+</table>
 <h2>Further Reading:</h2>
 <ul>
 <li><a href="tutorial-CreatingCommands.html">Creating Commands</a></li>

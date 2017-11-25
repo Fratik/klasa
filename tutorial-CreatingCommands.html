@@ -112,21 +112,96 @@ module.exports = class extends Command {
 };
 </code></pre>
 <h2>Configuration</h2>
-<ul>
-<li><strong>enabled</strong>: Represents if the inhibitor should be enabled or disabled, it must be
-a boolean. Set to false to completely disable this inhibitor, it cannot be forcefully enabled.</li>
-<li><strong>runIn</strong>: The channels types this command is allowed to run in.</li>
-<li><strong>cooldown</strong>: The time in seconds before a user can use this command again. (Does not apply to bot owners)</li>
-<li><strong>aliases</strong>: Other names this command will respond to.</li>
-<li><strong>permLevel</strong>: The permission level required to run this command. From 0 as everyone, to 10 as bot owner only with default permlevels.</li>
-<li><strong>botPerms</strong>: The permissions needed to run the command, based on Permissions in discord.js.</li>
-<li><strong>requiredSettings</strong>: Any required guild settings, that must be set before you can use this command.</li>
-<li><strong>description</strong>: The command description.</li>
-<li><strong>quotedStringSupport</strong>: Whether args for this command should not be deliminated inside quotes. Default is undefined or false. Change to true to use it.</li>
-<li><strong>usage</strong>: The expected arguments for this command. See <a href="tutorial-UnderstandingUsageStrings.html">Understanding Usage Strings</a> for information on how to use this.</li>
-<li><strong>usageDelim</strong>: The deliminator for how the usage will be deliminated. Popular ones are <code>' '</code> (a space), and <code>', '</code> (a comma space).</li>
-<li><strong>extendedHelp</strong>: A more in depth help string if you would like to define it.</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>name</strong></td>
+<td><code>theFileName</code></td>
+<td>string</td>
+<td>The name of the command</td>
+</tr>
+<tr>
+<td><strong>enabled</strong></td>
+<td><code>true</code></td>
+<td>boolean</td>
+<td>Whether the command is enabled or not</td>
+</tr>
+<tr>
+<td><strong>runIn</strong></td>
+<td><code>['text', 'dm', 'group']</code></td>
+<td>Array</td>
+<td>What channel types the command should run in</td>
+</tr>
+<tr>
+<td><strong>cooldown</strong></td>
+<td><code>0</code></td>
+<td>number</td>
+<td>The amount of time before the user can run the command again in seconds</td>
+</tr>
+<tr>
+<td><strong>aliases</strong></td>
+<td><code>[]</code></td>
+<td>Array</td>
+<td>Any comand aliases</td>
+</tr>
+<tr>
+<td><strong>permLevel</strong></td>
+<td><code>0</code></td>
+<td>number</td>
+<td>The required permission level to use the command</td>
+</tr>
+<tr>
+<td><strong>botPerms</strong></td>
+<td><code>[]</code></td>
+<td>Array</td>
+<td>The required Discord permissions for the bot to use this command</td>
+</tr>
+<tr>
+<td><strong>requiredSettings</strong></td>
+<td><code>[]</code></td>
+<td>Array</td>
+<td>The required guild settings to use this command</td>
+</tr>
+<tr>
+<td><strong>description</strong></td>
+<td><code>''</code></td>
+<td>string</td>
+<td>The help description for the command</td>
+</tr>
+<tr>
+<td><strong>usage</strong></td>
+<td><code>''</code></td>
+<td>string</td>
+<td>The usage string for the command See. <a href="tutorial-UnderstandingUsageStrings.html">Understanding Usage Strings</a></td>
+</tr>
+<tr>
+<td><strong>usageDelim</strong></td>
+<td><code>''</code></td>
+<td>string</td>
+<td>The string to deliminate the command input for usage</td>
+</tr>
+<tr>
+<td><strong>quotedStringSupport</strong></td>
+<td><code>client.config.quotedStringSupport</code></td>
+<td>boolean</td>
+<td>Wheter args for this command should not deliminated inside quotes</td>
+</tr>
+<tr>
+<td><strong>extendedHelp</strong></td>
+<td><code>'No extended help available.'</code></td>
+<td>string</td>
+<td>Extended help strings</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>All commands are required to return an <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">Object Promise</a> you can do that by adding the <code>async</code> keyword to the function, there's no need to change anything else.</p>
 </blockquote>
