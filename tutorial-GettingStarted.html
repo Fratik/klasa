@@ -90,9 +90,9 @@
 </code></pre>
 <h3>Using Klasa</h3>
 <p>Create a file called <code>app.js</code> (or whatever you prefer) which will initiate and configure Klasa.</p>
-<pre class="prettyprint source lang-javascript"><code>const klasa = require('klasa');
+<pre class="prettyprint source lang-javascript"><code>const { Client } = require('klasa');
 
-const client = new klasa.Client({
+new Client({
     clientOptions: {
         fetchAllMembers: false
     },
@@ -100,9 +100,7 @@ const client = new klasa.Client({
     cmdEditing: true,
     typing: true,
     readyMessage: (client) => `${client.user.tag}, Ready to serve ${client.guilds.size} guilds and ${client.users.size} users`
-});
-
-client.login('your-bot-token');
+}).login('your-bot-token');
 </code></pre>
 <h3>Configuration Options: <a href="KlasaClient.html#.KlasaClientConfig"><code>KlasaClientConfig</code></a></h3>
 <table>
@@ -156,6 +154,18 @@ client.login('your-bot-token');
 <td><code>json</code></td>
 <td>string</td>
 <td>The provider to use in Klasa</td>
+</tr>
+<tr>
+<td><strong>language</strong></td>
+<td><code>en-US</code></td>
+<td>string</td>
+<td>The default language Klasa should opt-in for the commands</td>
+</tr>
+<tr>
+<td><strong>promptTime</strong></td>
+<td><code>30000</code></td>
+<td>number</td>
+<td>The amount of time in milliseconds prompts should last</td>
 </tr>
 <tr>
 <td><strong>ignoreBots</strong></td>
