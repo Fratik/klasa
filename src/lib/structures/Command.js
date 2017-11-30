@@ -193,7 +193,7 @@ class Command {
 		 * Custom command options, for inhibitors
 		 * @type {Object}
 		 */
-		this.cmdOptions = options.cmdOptions;
+		this.cmdOptions = options.cmdOptions || {};
 	}
 
 	/**
