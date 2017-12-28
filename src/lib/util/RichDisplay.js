@@ -14,7 +14,6 @@ class RichDisplay {
 
 	/**
 	 * @typedef {object} RichDisplayEmojisObject
-	 * @memberof RichDisplay
 	 * @property {emoji} first
 	 * @property {emoji} back
 	 * @property {emoji} forward
@@ -22,27 +21,28 @@ class RichDisplay {
 	 * @property {emoji} jump
 	 * @property {emoji} info
 	 * @property {emoji} stop
+	 * @memberof RichDisplay
 	 */
 
 	/**
 	 * @typedef {object} RichDisplayRunOptions
-	 * @memberof RichDisplay
-	 * @property {Function} [filter] A filter function to add to the ReactionHandler (Recieves: Reaction, User)
-	 * @property {boolean} [stop = true] If a stop reaction should be included
-	 * @property {boolean} [jump = true] If a jump reaction should be included
-	 * @property {boolean} [firstLast = true] If a first and last reaction should be included
-	 * @property {string} [prompt = 'Which page would you like to jump to?'] The prompt to be used when awaiting user input on a page to jump to
-	 * @property {number} [startPage = 0] The page to start the RichDisplay on
+	 * @property {Function} [filter] A filter function to add to the ReactionHandler (Receives: Reaction, User)
+	 * @property {boolean} [stop=true] If a stop reaction should be included
+	 * @property {boolean} [jump=true] If a jump reaction should be included
+	 * @property {boolean} [firstLast=true] If a first and last reaction should be included
+	 * @property {string} [prompt=msg.language.get('REACTIONHANDLER_PROMPT')] The prompt to be used when awaiting user input on a page to jump to
+	 * @property {number} [startPage=0] The page to start the RichDisplay on
 	 * @property {number} [max] The maximum total amount of reactions to collect
 	 * @property {number} [maxEmojis] The maximum number of emojis to collect
 	 * @property {number} [maxUsers] The maximum number of users to react
 	 * @property {number} [time] The maximum amount of time before this RichDisplay should expire
+	 * @memberof RichDisplay
 	 */
 
 	/**
 	 * Constructs our RichDisplay instance
 	 * @since 0.4.0
-	 * @param  {external:MessageEmbed} [embed=new MessageEmbed()] A Template embed to apply to all pages
+	 * @param {external:MessageEmbed} [embed=new MessageEmbed()] A Template embed to apply to all pages
 	 */
 	constructor(embed = new Embed()) {
 		/**
@@ -87,6 +87,20 @@ class RichDisplay {
 		 * @type {boolean}
 		 */
 		this.footered = false;
+
+		/**
+		 * Adds a prefix to all footers (before page/pages)
+		 * @since 0.5.0
+		 * @type {string}
+		 */
+		this.footerPrefix = '';
+
+		/**
+		 * Adds a suffix to all footers (after page/pages)
+		 * @since 0.5.0
+		 * @type {string}
+		 */
+		this.footerSuffix = '';
 	}
 
 	/**
@@ -102,7 +116,7 @@ class RichDisplay {
 	/**
 	 * Sets emojis to a new set of emojis
 	 * @since 0.4.0
-	 * @param {RichDisplayEmojisObject} emojis An object containing replacement emojis to use instead.
+	 * @param {RichDisplayEmojisObject} emojis An object containing replacement emojis to use instead
 	 * @returns {RichDisplay} this RichDisplay
 	 */
 	setEmojis(emojis) {
@@ -111,9 +125,43 @@ class RichDisplay {
 	}
 
 	/**
+	 * Sets a prefix for all footers
+	 * @since 0.5.0
+	 * @param {string} prefix The prefix you want to add
+	 * @returns {RichDisplay} this RichDisplay
+	 */
+	setFooterPrefix(prefix) {
+		this.footered = false;
+		this.footerPrefix = prefix;
+		return this;
+	}
+
+	/**
+	 * Sets a suffix for all footers
+	 * @since 0.5.0
+	 * @param {string} suffix The suffix you want to add
+	 * @returns {RichDisplay} this RichDisplay
+	 */
+	setFooterSuffix(suffix) {
+		this.footered = false;
+		this.footerSuffix = suffix;
+		return this;
+	}
+
+	/**
+	 * Turns off the footer altering function
+	 * @since 0.5.0
+	 * @returns {RichDisplay} this RichDisplay
+	 */
+	useCustomFooters() {
+		this.footered = true;
+		return this;
+	}
+
+	/**
 	 * Adds a page to the RichDisplay
 	 * @since 0.4.0
-	 * @param {(Function|external:MessageEmbed)} embed A callback with the embed template passed and the embed returned, or an embed.
+	 * @param {(Function|external:MessageEmbed)} embed A callback with the embed template passed and the embed returned, or an embed
 	 * @returns {RichDisplay} this RichDisplay
 	 */
 	addPage(embed) {
@@ -124,7 +172,7 @@ class RichDisplay {
 	/**
 	 * Adds an info page to the RichDisplay
 	 * @since 0.4.0
-	 * @param {(Function|external:MessageEmbed)} embed A callback with the embed template passed and the embed returned, or an embed.
+	 * @param {(Function|external:MessageEmbed)} embed A callback with the embed template passed and the embed returned, or an embed
 	 * @returns {RichDisplay} this RichDisplay
 	 */
 	setInfoPage(embed) {
@@ -135,7 +183,7 @@ class RichDisplay {
 	/**
 	 * Runs the RichDisplay
 	 * @since 0.4.0
-	 * @param {external:Message} msg A message to either edit, or use to send a new message for this RichDisplay
+	 * @param {KlasaMessage} msg A message to either edit, or use to send a new message for this RichDisplay
 	 * @param {RichDisplayRunOptions} [options={}] The options to use while running this RichDisplay
 	 * @returns {ReactionHandler}
 	 */
@@ -165,12 +213,12 @@ class RichDisplay {
 	 * @private
 	 */
 	async _footer() {
-		for (let i = 1; i <= this.pages.length; i++) this.pages[i - 1].setFooter(`${i}/${this.pages.length}`);
+		for (let i = 1; i <= this.pages.length; i++) this.pages[i - 1].setFooter(`${this.footerPrefix}${i}/${this.pages.length}${this.footerSuffix}`);
 		if (this.infoPage) this.infoPage.setFooter('ℹ');
 	}
 
 	/**
-	 * Determins the emojis to use in this display
+	 * Determines the emojis to use in this display
 	 * @since 0.4.0
 	 * @param {emoji[]} emojis An array of emojis to use
 	 * @param {boolean} stop Whether the stop emoji should be included

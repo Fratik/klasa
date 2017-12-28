@@ -1,4 +1,5 @@
 const Piece = require('./interfaces/Piece');
+const { mergeDefault } = require('../util/util');
 const Discord = require('discord.js');
 
 /**
@@ -11,10 +12,10 @@ class Extendable {
 
 	/**
 	 * @typedef {object} ExtendableOptions
+	 * @property {string} [name=theFileName] The name of the extendable
+	 * @property {boolean} [enabled=true] If the extendable is enabled or not
+	 * @property {boolean} [klasa=false] If the extendable is for Klasa instead of Discord.js
 	 * @memberof Extendable
-	 * @property {string} [name = theFileName] The name of the extendable
-	 * @property {boolean} [enabled = true] If the extendable is enabled or not
-	 * @property {boolean} [klasa = false] If the extendable is for Klasa instead of Discord.js
 	 */
 
 	/**
@@ -26,6 +27,8 @@ class Extendable {
 	 * @param {ExtendableOptions} options The options for this extendable
 	 */
 	constructor(client, dir, file, appliesTo = [], options = {}) {
+		options = mergeDefault(client.options.pieceDefaults.extendables, options);
+
 		/**
 		 * @since 0.0.1
 		 * @type {KlasaClient}
@@ -72,7 +75,7 @@ class Extendable {
 		 * @since 0.0.1
 		 * @type {boolean}
 		 */
-		this.enabled = 'enabled' in options ? options.enabled : true;
+		this.enabled = options.enabled;
 
 		/**
 		 * The target library to apply this extendable to
@@ -85,9 +88,8 @@ class Extendable {
 	/**
 	 * The extend method to be overwritten in actual extend pieces
 	 * @since 0.0.1
-	 * @param {any} params Any parameters you want
+	 * @param {*} params Any parameters you want
 	 * @abstract
-	 * @returns {any}
 	 */
 	extend() {
 		// Defined in extension Classes
@@ -116,8 +118,8 @@ class Extendable {
 
 	/**
 	 * Enables this piece
-	 * @param {boolean} [init=false] If the piece is being init or not
 	 * @since 0.0.1
+	 * @param {boolean} [init=false] If the piece is being init or not
 	 * @returns {Piece} This piece
 	 */
 	enable(init = false) {
@@ -129,8 +131,8 @@ class Extendable {
 
 	// left for documentation
 	/* eslint-disable no-empty-function */
-	async reload() {}
-	unload() {}
+	async reload() { }
+	unload() { }
 	/* eslint-enable no-empty-function */
 
 }

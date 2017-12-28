@@ -13,7 +13,7 @@ class FinalizerStore extends Collection {
 	/**
 	 * Constructs our FinalizerStore for use in Klasa
 	 * @since 0.0.1
-	 * @param  {KlasaClient} client The Klasa client
+	 * @param {KlasaClient} client The Klasa client
 	 */
 	constructor(client) {
 		super();
@@ -59,7 +59,7 @@ class FinalizerStore extends Collection {
 	/**
 	 * Deletes a finalizer from the store
 	 * @since 0.0.1
-	 * @param  {Finalizer|string} name The finalizer object or a string representing the structure this store caches
+	 * @param {Finalizer|string} name The finalizer object or a string representing the structure this store caches
 	 * @return {boolean} whether or not the delete was successful.
 	 */
 	delete(name) {
@@ -72,17 +72,27 @@ class FinalizerStore extends Collection {
 	/**
 	 * Runs all of our finalizers after a command is ran successfully.
 	 * @since 0.0.1
-	 * @param  {Array} args An array of arguments passed down from the command
+	 * @param {KlasaMessage} msg The message that called the command
+	 * @param {KlasaMessage|any} mes The response of the command
+	 * @param {StopWatch} timer The timer run from start to queue of the command
 	 * @return {void}
 	 */
-	run(...args) {
-		for (const finalizer of this.values()) if (finalizer.enabled) finalizer.run(...args);
+	async run(msg, mes, timer) {
+		for (const finalizer of this.values()) {
+			if (finalizer.enabled) {
+				try {
+					await finalizer.run(msg, mes, timer);
+				} catch (err) {
+					this.client.emit('finalizerError', msg, mes, timer, finalizer, err);
+				}
+			}
+		}
 	}
 
 	/**
 	 * Sets up a finalizer in our store.
 	 * @since 0.0.1
-	 * @param {Finalizer} finalizer The finalizer object we are setting up.
+	 * @param {Finalizer} finalizer The finalizer object we are setting up
 	 * @returns {Finalizer}
 	 */
 	set(finalizer) {
