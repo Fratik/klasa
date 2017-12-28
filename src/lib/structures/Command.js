@@ -1,7 +1,5 @@
 const Piece = require('./interfaces/Piece');
-const { mergeDefault } = require('../util/util');
 const ParsedUsage = require('../usage/ParsedUsage');
-const CommandUsage = require('../usage/CommandUsage');
 
 /**
  * Base class for all Klasa Commands. See {@tutorial CreatingCommands} for more information how to use this class
@@ -13,26 +11,20 @@ class Command {
 
 	/**
 	 * @typedef {Object} CommandOptions
+	 * @memberof Command
 	 * @property {string} [name=theFileName] The name of the command
 	 * @property {boolean} [enabled=true] Whether the command is enabled or not
 	 * @property {string[]} [runIn=['text','dm','group']] What channel types the command should run in
 	 * @property {number} [cooldown=0] The amount of time before the user can run the command again in seconds
-	 * @property {boolean} [nsfw=false] If the command should only run in nsfw channels
-	 * @property {boolean} [deletable=false] If the responses should be deleted if the triggering message is deleted
-	 * @property {boolean} [promptTime=30000] The time allowed for re-prompting of this command
-	 * @property {boolean} [promptLimit=0] The number or attempts allowed for re-prompting an argument
-	 * @property {boolean} [guarded=false] If the command can be disabled on a guild level (does not effect global disable)
-	 * @property {string[]} [aliases=[]] Any command aliases
-	 * @property {boolean} [autoAliases=true] If automatic aliases should be added (adds aliases of name and aliases without dashes)
+	 * @property {string[]} [aliases=[]] Any comand aliases
 	 * @property {number} [permLevel=0] The required permission level to use the command
 	 * @property {string[]} [botPerms=[]] The required Discord permissions for the bot to use this command
-	 * @property {string[]} [requiredConfigs=[]] The required guild configs to use this command
-	 * @property {(string|Function)} [description=''] The help description for the command
+	 * @property {string[]} [requiredSettings=[]] The required guild settings to use this command
+	 * @property {string} [description=''] The help description for the command
 	 * @property {string} [usage=''] The usage string for the command
-	 * @property {?string} [usageDelim=undefined] The string to delimit the command input for usage
-	 * @property {boolean} [quotedStringSupport=this.client.options.commands.quotedStringSupport] Whether args for this command should not deliminated inside quotes
-	 * @property {(string|Function)} [extendedHelp=msg.language.get('COMMAND_HELP_NO_EXTENDED')] Extended help strings
-	 * @memberof Command
+	 * @property {?string} [usageDelim=undefined] The string to deliminate the command input for usage
+	 * @property {boolean} [quotedStringSupport=this.client.config.quotedStringSupport] Wheter args for this command should not deliminated inside quotes
+	 * @property {string} [extendedHelp='No extended help available.'] Extended help strings
 	 */
 
 	/**
@@ -40,11 +32,9 @@ class Command {
 	 * @param {KlasaClient} client The Klasa Client
 	 * @param {string} dir The path to the core or user command pieces folder
 	 * @param {Array} file The path from the pieces folder to the command file
-	 * @param {CommandOptions} [options={}] Optional Command settings
+	 * @param {CommandOptions} [options = {}] Optional Command settings
 	 */
 	constructor(client, dir, file, options = {}) {
-		options = mergeDefault(client.options.pieceDefaults.commands, options);
-
 		/**
 		 * @since 0.0.1
 		 * @type {KlasaClient}
@@ -63,134 +53,91 @@ class Command {
 		 * @since 0.0.1
 		 * @type {boolean}
 		 */
-		this.enabled = options.enabled;
+		this.enabled = 'enabled' in options ? options.enabled : true;
 
 		/**
 		 * What channels the command should run in
 		 * @since 0.0.1
 		 * @type {string[]}
 		 */
-		this.runIn = options.runIn;
+		this.runIn = options.runIn || ['text', 'dm', 'group'];
 
 		/**
 		 * The cooldown in seconds this command has
 		 * @since 0.0.1
 		 * @type {number}
 		 */
-		this.cooldown = options.cooldown;
-
-		/**
-		 * Whether this command should only run in NSFW channels or not
-		 * @since 0.5.0
-		 * @type {boolean}
-		 */
-		this.nsfw = options.nsfw;
-
-		/**
-		 * Whether this command should not be able to be disabled in a guild or not
-		 * @since 0.5.0
-		 * @type {boolean}
-		 */
-		this.guarded = options.guarded;
-
-		/**
-		 * Whether this command should have it's responses deleted if the triggering message is deleted
-		 * @since 0.5.0
-		 * @type {boolean}
-		 */
-		this.deletable = options.deletable;
-
-		/**
-		 * The time allowed for re-prompting of this command
-		 * @since 0.5.0
-		 * @type {number}
-		 */
-		this.promptTime = options.promptTime;
-
-		/**
-		 * The number or attempts allowed for re-prompting an argument
-		 * @since 0.5.0
-		 * @type {number}
-		 */
-		this.promptLimit = options.promptLimit;
-
-		/**
-		 * The name of the command
-		 * @since 0.0.1
-		 * @type {string}
-		 */
-		this.name = options.name || file[file.length - 1].slice(0, -3).toLowerCase();
+		this.cooldown = options.cooldown || 0;
 
 		/**
 		 * The aliases for this command
 		 * @since 0.0.1
 		 * @type {string[]}
 		 */
-		this.aliases = options.aliases;
-		if (options.autoAliases) {
-			if (this.name.includes('-')) this.aliases.push(this.name.replace(/-/g, ''));
-			for (const alias of this.aliases) if (alias.includes('-')) this.aliases.push(alias.replace(/-/g, ''));
-		}
+		this.aliases = options.aliases || [];
 
 		/**
 		 * The required permLevel to run this command
 		 * @since 0.0.1
 		 * @type {number}
 		 */
-		this.permLevel = options.permLevel;
+		this.permLevel = options.permLevel || 0;
 
 		/**
 		 * The required bot permissions to run this command
 		 * @since 0.0.1
 		 * @type {string[]}
 		 */
-		this.botPerms = options.botPerms;
+		this.botPerms = options.botPerms || [];
 
 		/**
-		 * The required per guild configs to run this command
+		 * The required guild settings to run this command
 		 * @since 0.0.1
 		 * @type {string[]}
 		 */
-		this.requiredConfigs = options.requiredConfigs;
+		this.requiredSettings = options.requiredSettings || [];
+
+		/**
+		 * The name of the command
+		 * @since 0.0.1
+		 * @type {string}
+		 */
+		this.name = options.name || file[file.length - 1].slice(0, -3);
 
 		/**
 		 * The description of the command
 		 * @since 0.0.1
-		 * @type {(string|Function)}
-		 * @param {KlasaMessage} msg The message used to trigger this command
-		 * @returns {string}
+		 * @type {string}
 		 */
-		this.description = options.description;
+		this.description = options.description || '';
 
 		/**
 		 * The extended help for the command
 		 * @since 0.0.1
-		 * @type {(string|Function)}
-		 * @param {KlasaMessage} msg The message used to trigger this command
-		 * @returns {string}
+		 * @type {string}
 		 */
-		this.extendedHelp = options.extendedHelp || (msg => msg.language.get('COMMAND_HELP_NO_EXTENDED'));
+		this.extendedHelp = options.extendedHelp || 'No extended help available.';
 
 		/**
 		 * The usage string for the command
 		 * @since 0.0.1
 		 * @type {string}
 		 */
-		this.usageString = options.usage;
+		this.usageString = options.usage || '';
 
 		/**
 		 * The usage deliminator for the command input
 		 * @since 0.0.1
 		 * @type {?string}
 		 */
-		this.usageDelim = options.usageDelim;
+		this.usageDelim = options.usageDelim || undefined;
 
 		/**
 		 * Whether to use quoted string support for this command or not
 		 * @since 0.2.1
 		 * @type {boolean}
 		 */
-		this.quotedStringSupport = options.quotedStringSupport;
+		this.quotedStringSupport = 'quotedStringSupport' in options ? options.quotedStringSupport : this.client.config.quotedStringSupport;
 
 		/**
 		 * The full category for the command
@@ -216,9 +163,9 @@ class Command {
 		/**
 		 * The parsed usage for the command
 		 * @since 0.0.1
-		 * @type {CommandUsage}
+		 * @type {ParsedUsage}
 		 */
-		this.usage = new CommandUsage(client, this);
+		this.usage = new ParsedUsage(client, this);
 
 		/**
 		 * Any active cooldowns for the command
@@ -250,33 +197,22 @@ class Command {
 	}
 
 	/**
-	 * Creates a ParsedUsage to run custom prompts off of
-	 * @param {string} usageString The string designating all parameters expected
-	 * @param {string} usageDelim The string to delimit the input
-	 * @returns {ParsedUsage}
-	 */
-	definePrompt(usageString, usageDelim) {
-		return new ParsedUsage(this.client, usageString, usageDelim);
-	}
-
-	/**
 	 * The run method to be overwritten in actual commands
 	 * @since 0.0.1
-	 * @param {KlasaMessage} msg The command message mapped on top of the message used to trigger this command
+	 * @param {CommandMessage} msg The command message mapped on top of the message used to trigger this command
 	 * @param {any[]} params The fully resolved parameters based on your usage / usageDelim
-	 * @returns {Promise<KlasaMessage|KlasaMessage[]>} You should return the response message whenever possible
 	 * @abstract
+	 * @returns {external:Message} You should return the response message whenever possible
 	 */
-	async run(msg) {
+	async run() {
 		// Defined in extension Classes
-		return msg;
 	}
 
 	/**
-	 * The init method to be optionally overwritten in actual commands
+	 * The init method to be optionaly overwritten in actual commands
 	 * @since 0.0.1
-	 * @returns {Promise<*>}
 	 * @abstract
+	 * @returns {void}
 	 */
 	async init() {
 		// Optionally defined in extension Classes

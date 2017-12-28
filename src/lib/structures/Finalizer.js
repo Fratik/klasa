@@ -1,5 +1,4 @@
 const Piece = require('./interfaces/Piece');
-const { mergeDefault } = require('../util/util');
 
 /**
  * Base class for all Klasa Finalizers. See {@tutorial CreatingFinalizers} for more information how to use this class
@@ -11,9 +10,9 @@ class Finalizer {
 
 	/**
 	 * @typedef {Object} FinalizerOptions
-	 * @property {string} [name=theFileName] The name of the finalizer
-	 * @property {boolean} [enabled=true] Whether the finalizer is enabled or not
 	 * @memberof Finalizer
+	 * @property {string} [name = theFileName] The name of the finalizer
+	 * @property {boolean} [enabled=true] Whether the finalizer is enabled or not
 	 */
 
 	/**
@@ -21,11 +20,9 @@ class Finalizer {
 	 * @param {KlasaClient} client The Klasa Client
 	 * @param {string} dir The path to the core or user finalizer pieces folder
 	 * @param {string} file The path from the pieces folder to the finalizer file
-	 * @param {FinalizerOptions} [options={}] Optional Finalizer settings
+	 * @param {FinalizerOptions} [options = {}] Optional Finalizer settings
 	 */
 	constructor(client, dir, file, options = {}) {
-		options = mergeDefault(client.options.pieceDefaults.finalizers, options);
-
 		/**
 		 * @since 0.0.1
 		 * @type {KlasaClient}
@@ -65,27 +62,27 @@ class Finalizer {
 		 * @since 0.0.1
 		 * @type {boolean}
 		 */
-		this.enabled = options.enabled;
+		this.enabled = 'enabled' in options ? options.enabled : true;
 	}
 
 	/**
 	 * The run method to be overwritten in actual finalizers
 	 * @since 0.0.1
-	 * @param {KlasaMessage} msg The message used to trigger this finalizer
-	 * @param {KlasaMessage|KlasaMessage[]} mes The bot's response message, if one is returned
+	 * @param {CommandMessage} msg The command message mapped on top of the message used to trigger this finalizer
+	 * @param {external:Message} mes The bot's response message, if one is returned
 	 * @param {number} start The performance now start time including all command overhead
-	 * @returns {void}
 	 * @abstract
+	 * @returns {void}
 	 */
 	run() {
 		// Defined in extension Classes
 	}
 
 	/**
-	 * The init method to be optionally overwritten in actual finalizers
+	 * The init method to be optionaly overwritten in actual finalizers
 	 * @since 0.0.1
-	 * @returns {void}
 	 * @abstract
+	 * @returns {void}
 	 */
 	async init() {
 		// Optionally defined in extension Classes

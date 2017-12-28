@@ -1,5 +1,4 @@
 const Piece = require('./interfaces/Piece');
-const { mergeDefault } = require('../util/util');
 
 /**
  * Base class for all Klasa Monitors. See {@tutorial CreatingMonitors} for more information how to use this class
@@ -11,12 +10,12 @@ class Monitor {
 
 	/**
 	 * @typedef {Object} MonitorOptions
-	 * @property {string} [name=theFileName] The name of the monitor
+	 * @memberof Monitor
+	 * @property {string} [name = theFileName] The name of the monitor
 	 * @property {boolean} [enabled=true] Whether the monitor is enabled or not
 	 * @property {boolean} [ignoreBots=true] Whether the monitor ignores bots or not
 	 * @property {boolean} [ignoreSelf=true] Whether the monitor ignores itself or not
 	 * @property {boolean} [ignoreOthers=true] Whether the monitor ignores others or not
-	 * @memberof Monitor
 	 */
 
 	/**
@@ -24,11 +23,9 @@ class Monitor {
 	 * @param {KlasaClient} client The Klasa client
 	 * @param {string} dir The path to the core or user monitor pieces folder
 	 * @param {string} file The path from the pieces folder to the monitor file
-	 * @param {MonitorOptions} [options={}] Optional Monitor settings
+	 * @param {MonitorOptions} [options = {}] Optional Monitor settings
 	 */
 	constructor(client, dir, file, options = {}) {
-		options = mergeDefault(client.options.pieceDefaults.monitors, options);
-
 		/**
 		 * @since 0.0.1
 		 * @type {KlasaClient}
@@ -68,46 +65,46 @@ class Monitor {
 		 * @since 0.0.1
 		 * @type {boolean}
 		 */
-		this.enabled = options.enabled;
+		this.enabled = 'enabled' in options ? options.enabled : true;
 
 		/**
 		 * Whether the monitor ignores bots or not
 		 * @since 0.0.1
 		 * @type {boolean}
 		 */
-		this.ignoreBots = options.ignoreBots;
+		this.ignoreBots = 'ignoreBots' in options ? options.ignoreBots : true;
 
 		/**
 		 * Whether the monitor ignores itself or not
 		 * @since 0.0.1
 		 * @type {boolean}
 		 */
-		this.ignoreSelf = options.ignoreSelf;
+		this.ignoreSelf = 'ignoreSelf' in options ? options.ignoreSelf : true;
 
 		/**
 		 * Whether the monitor ignores others or not
 		 * @since 0.4.0
 		 * @type {boolean}
 		 */
-		this.ignoreOthers = options.ignoreOthers;
+		this.ignoreOthers = 'ignoreOthers' in options ? options.ignoreOthers : true;
 	}
 
 	/**
 	 * The run method to be overwritten in actual monitor pieces
 	 * @since 0.0.1
-	 * @param {KlasaMessage} msg The discord message
-	 * @returns {void}
+	 * @param {external:Message} msg The discord message
 	 * @abstract
+	 * @returns {void}
 	 */
 	run() {
 		// Defined in extension Classes
 	}
 
 	/**
-	 * The init method to be optionally overwritten in actual monitor pieces
+	 * The init method to be optionaly overwritten in actual monitor pieces
 	 * @since 0.0.1
-	 * @returns {void}
 	 * @abstract
+	 * @returns {void}
 	 */
 	async init() {
 		// Optionally defined in extension Classes

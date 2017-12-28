@@ -1,9 +1,7 @@
 const { Console } = require('console');
-const { inspect } = require('util');
 const Colors = require('./Colors');
-const Timestamp = require('./Timestamp');
-const constants = require('./constants');
-const { mergeDefault } = require('./util');
+const moment = require('moment');
+const { inspect } = require('util');
 
 /**
  * Klasa's console class, extends NodeJS Console class.
@@ -11,41 +9,42 @@ const { mergeDefault } = require('./util');
 class KlasaConsole extends Console {
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {object} Colors - Time is for the timestamp of the log, message is for the actual output.
-	 * @property {KlasaConsoleColorObjects} debug An object containing a message and time color object
-	 * @property {KlasaConsoleColorObjects} error An object containing a message and time color object
-	 * @property {KlasaConsoleColorObjects} log An object containing a message and time color object
-	 * @property {KlasaConsoleColorObjects} verbose An object containing a message and time color object
-	 * @property {KlasaConsoleColorObjects} warn An object containing a message and time color object
-	 * @property {KlasaConsoleColorObjects} wtf An object containing a message and time Color Object
-	 * @memberof KlasaConsole
+	 * @property {KlasaConsoleColorObjects} debug An object containing a message and time color object.
+	 * @property {KlasaConsoleColorObjects} error An object containing a message and time color object.
+	 * @property {KlasaConsoleColorObjects} log An object containing a message and time color object.
+	 * @property {KlasaConsoleColorObjects} verbose An object containing a message and time color object.
+	 * @property {KlasaConsoleColorObjects} warn An object containing a message and time color object.
+	 * @property {KlasaConsoleColorObjects} wtf An object containing a message and time Color Object.
 	 */
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {object} KlasaConsoleColorObjects
-	 * @property {string} [type='log'] The method from Console this color object should call
-	 * @property {KlasaConsoleMessageObject} message A message object containing colors and styles
-	 * @property {KlasaConsoleTimeObject} time A time object containing colors and styles
-	 * @memberof KlasaConsole
+	 * @property {string} [type='log'] The method from Console this color object should call.
+	 * @property {KlasaConsoleMessageObject} message A message object containing colors and styles.
+	 * @property {KlasaConsoleTimeObject} time A time object containing colors and styles.
 	 */
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {object} KlasaConsoleMessageObject
-	 * @property {BackgroundColorTypes} background The background color. Can be a basic string like "red", a hex string, or a RGB array
-	 * @property {TextColorTypes} text The text color. Can be a basic string like "red", a hex string, or a RGB array
-	 * @property {StyleTypes} style A style string from StyleTypes
-	 * @memberof KlasaConsole
+	 * @property {BackgroundColorTypes} background The background color. Can be a basic string like "red", a hex string, or a RGB array.
+	 * @property {TextColorTypes} text The text color. Can be a basic string like "red", a hex string, or a RGB array.
+	 * @property {StyleTypes} style A style string from StyleTypes.
 	 */
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {object} KlasaConsoleTimeObject
-	 * @property {BackgroundColorTypes} background The background color. Can be a basic string like "red", a hex string, or a RGB array
-	 * @property {TextColorTypes} text The text color. Can be a basic string like "red", a hex string, a RGB array, or HSL array
-	 * @property {StyleTypes} style A style string from StyleTypes
-	 * @memberof KlasaConsole
+	 * @property {BackgroundColorTypes} background The background color. Can be a basic string like "red", a hex string, or a RGB array.
+	 * @property {TextColorTypes} text The text color. Can be a basic string like "red", a hex string, a RGB array, or HSL array.
+	 * @property {StyleTypes} style A style string from StyleTypes.
 	 */
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {*} TextColorTypes - All the valid color types.
 	 * @property {string} black
 	 * @property {string} red
@@ -69,10 +68,10 @@ class KlasaConsole extends Console {
 	 * @property {string} #008000 green
 	 * @property {Array} [255,0,0] red
 	 * @property {Array} [229,50%,50%] blue
-	 * @memberof KlasaConsole
 	 */
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {*} BackgroundColorTypes - One of these strings, HexStrings, RGB, or HSL are valid types.
 	 * @property {string} black
 	 * @property {string} red
@@ -94,10 +93,10 @@ class KlasaConsole extends Console {
 	 * @property {string} #008000 green
 	 * @property {Array} [255,0,0] red
 	 * @property {Array} [229,50%,50%] blue
-	 * @memberof KlasaConsole
 	 */
 
 	/**
+	 * @memberof KlasaConsole
 	 * @typedef {*} StyleTypes
 	 * @property {string} normal
 	 * @property {string} bold
@@ -107,28 +106,15 @@ class KlasaConsole extends Console {
 	 * @property {string} inverse
 	 * @property {string} hidden
 	 * @property {string} strikethrough
-	 * @memberof KlasaConsole
 	 */
 
 	/**
 	 * Constructs our KlasaConsole instance
 	 * @since 0.4.0
-	 * @param {KlasaClient} client The client this console is for
-	 * @param {KlasaConsoleConfig} [options] The options for the klasa console
+	 * @param  {KlasaConsoleConfig} [options] The options for the klasa console.
 	 */
-	constructor(client, options = {}) {
-		options = mergeDefault(constants.DEFAULTS.CONSOLE, options);
-
-		super(options.stdout, options.stderr);
-
-		/**
-		 * The client this Console was created with
-		 * @since 0.5.0
-		 * @name KlasaConsole#client
-		 * @type {KlasaClient}
-		 * @readonly
-		 */
-		Object.defineProperty(this, 'client', { value: client });
+	constructor({ stdout = process.stdout, stderr = process.stderr, useColor, colors = {}, timestamps = true }) {
+		super(stdout, stderr);
 
 		/**
 		 * The standard output stream for this console, defaulted to process.stderr.
@@ -136,7 +122,7 @@ class KlasaConsole extends Console {
 		 * @name KlasaConsole#stdout
 		 * @type {WritableStream}
 		 */
-		Object.defineProperty(this, 'stdout', { value: options.stdout });
+		Object.defineProperty(this, 'stdout', { value: stdout });
 
 		/**
 		 * The standard error output stream for this console, defaulted to process.stderr.
@@ -144,50 +130,82 @@ class KlasaConsole extends Console {
 		 * @name KlasaConsole#stderr
 		 * @type {WritableStream}
 		 */
-		Object.defineProperty(this, 'stderr', { value: options.stderr });
+		Object.defineProperty(this, 'stderr', { value: stderr });
 
 		/**
 		 * Whether or not timestamps should be enabled for this console.
-		 * @since 0.5.0
-		 * @type {Timestamp}
+		 * @since 0.4.0
+		 * @type {(boolean|string)}
 		 */
-		this.template = options.timestamps !== false ? new Timestamp(options.timestamps === true ? 'YYYY-MM-DD HH:mm:ss' : options.timestamps) : null;
+		this.timestamps = timestamps === true ? 'YYYY-MM-DD HH:mm:ss' : timestamps;
 
 		/**
 		 * Whether or not this console should use colors.
 		 * @since 0.4.0
 		 * @type {boolean}
 		 */
-		this.useColors = typeof options.useColor === 'undefined' ? this.stdout.isTTY || false : options.useColor;
+		this.useColors = typeof useColor === 'undefined' ? this.stdout.isTTY || false : useColor;
 
 		/**
 		 * The colors for this console.
 		 * @since 0.4.0
 		 * @name KlasaConsole#colors
-		 * @type {boolean|Colors}
+		 * @type  {boolean|Colors}
 		 */
-		this.colors = options.colors;
+		this.colors = {
+			debug: colors.debug || {
+				type: 'log',
+				message: { background: null, text: null, style: null },
+				time: { background: 'magenta', text: null, style: null }
+			},
+			error: colors.error || {
+				type: 'error',
+				message: { background: null, text: null, style: null },
+				time: { background: 'red', text: null, style: null }
+			},
+			log: colors.log || {
+				type: 'log',
+				message: { background: null, text: null, style: null },
+				time: { background: 'blue', text: null, style: null }
+			},
+			verbose: colors.verbose || {
+				type: 'log',
+				message: { background: null, text: 'gray', style: null },
+				time: { background: null, text: 'gray', style: null }
+			},
+			warn: colors.warn || {
+				type: 'warn',
+				message: { background: null, text: null, style: null },
+				time: { background: 'lightyellow', text: 'black', style: null }
+			},
+			wtf: colors.wtf || {
+				type: 'error',
+				message: { background: null, text: 'red', style: null },
+				time: { background: 'red', text: null, style: null }
+			}
+		};
 	}
 
 
 	/**
 	 * Logs everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {*} data The data we want to print
-	 * @param {string} [type="log"] The type of log, particularly useful for coloring
+	 * @param  {*} data The data we want to print.
+	 * @param  {string} [type="log"] The type of log, particularly useful for coloring.
 	 */
 	write(data, type = 'log') {
 		data = KlasaConsole.flatten(data, this.useColors);
 		const color = this.colors[type.toLowerCase()] || {};
-		const timestamp = this.template ? `${this.timestamp(`[${this.template.display()}]`, color.time || {})} ` : '';
-		const shard = this.client.sharded ? `${this.shard(`[${this.client.shard.id}]`, color.shard)} ` : '';
-		super[color.type || 'log'](data.split('\n').map(str => `${timestamp}${shard}${this.messages(str, color.message)}`).join('\n'));
+		const message = color.message || {};
+		const time = color.time || {};
+		const timestamp = this.timestamps ? `${this.timestamp(`[${moment().format(this.timestamps)}]`, time)} ` : '';
+		super[color.type || 'log'](data.split('\n').map(str => `${timestamp}${this.messages(str, message)}`).join('\n'));
 	}
 
 	/**
 	 * Calls a log write with everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {...*} data The data we want to print
+	 * @param {...*} data The data we want to print.
 	 * @returns {void}
 	 */
 	log(...data) {
@@ -197,7 +215,7 @@ class KlasaConsole extends Console {
 	/**
 	 * Calls a warn write with everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {...*} data The data we want to print
+	 * @param {...*} data The data we want to print.
 	 * @returns {void}
 	 */
 	warn(...data) {
@@ -207,7 +225,7 @@ class KlasaConsole extends Console {
 	/**
 	 * Calls an error write with everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {...*} data The data we want to print
+	 * @param {...*} data The data we want to print.
 	 * @returns {void}
 	 */
 	error(...data) {
@@ -217,7 +235,7 @@ class KlasaConsole extends Console {
 	/**
 	 * Calls a debug write with everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {...*} data The data we want to print
+	 * @param {...*} data The data we want to print.
 	 * @returns {void}
 	 */
 	debug(...data) {
@@ -227,7 +245,7 @@ class KlasaConsole extends Console {
 	/**
 	 * Calls a verbose write with everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {...*} data The data we want to print
+	 * @param {...*} data The data we want to print.
 	 * @returns {void}
 	 */
 	verbose(...data) {
@@ -237,7 +255,7 @@ class KlasaConsole extends Console {
 	/**
 	 * Calls a wtf (what a terrible failure) write with everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {...*} data The data we want to print
+	 * @param {...*} data The data we want to print.
 	 * @returns {void}
 	 */
 	wtf(...data) {
@@ -247,37 +265,25 @@ class KlasaConsole extends Console {
 	/**
 	 * Logs everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {string} input The timestamp to maybe format
-	 * @param {ColorsFormatOptions} time The time format used for coloring
+	 * @param {Date} timestamp The timestamp to maybe format
+	 * @param {string} time The time format used for coloring
 	 * @returns {string}
 	 */
-	timestamp(input, time) {
-		if (!this.useColors) return input;
-		return Colors.format(input, time);
-	}
-
-	/**
-	 * Logs everything to the console/writable stream.
-	 * @since 0.5.0
-	 * @param {string} input The shard string to maybe format
-	 * @param {ColorsFormatOptions} shard The shard format used for coloring
-	 * @returns {string}
-	 */
-	shard(input, shard) {
-		if (!this.useColors) return input;
-		return Colors.format(input, shard);
+	timestamp(timestamp, time) {
+		if (!this.useColors) return timestamp;
+		return Colors.format(timestamp, time);
 	}
 
 	/**
 	 * Logs everything to the console/writable stream.
 	 * @since 0.4.0
-	 * @param {string} input The data we want to print
-	 * @param {ColorsFormatOptions} message The message format used for coloring
+	 * @param {string} string The data we want to print.
+	 * @param {string} message The message format used for coloring
 	 * @returns {string}
 	 */
-	messages(input, message) {
-		if (!this.useColors) return input;
-		return Colors.format(input, message);
+	messages(string, message) {
+		if (!this.useColors) return string;
+		return Colors.format(string, message);
 	}
 
 	/**

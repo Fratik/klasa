@@ -7,7 +7,8 @@ module.exports = class extends Extendable {
 	}
 
 	get extend() {
-		return !this.guild || (this.readable && this.permissionsFor(this.guild.me).has('SEND_MESSAGES'));
+		if (!this.guild) return true;
+		return this.readable && this.permissionsFor(this.guild.me).has('SEND_MESSAGES');
 	}
 
 };
