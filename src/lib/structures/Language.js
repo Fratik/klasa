@@ -1,5 +1,4 @@
 const Piece = require('./interfaces/Piece');
-const { mergeDefault } = require('../util/util');
 
 /**
  * Base class for all Klasa Languages. See {@tutorial CreatingLanguages} for more information how to use this class
@@ -11,9 +10,9 @@ class Language {
 
 	/**
 	 * @typedef {Object} LanguageOptions
-	 * @property {string} [name=theFileName] The name of the language
-	 * @property {boolean} [enabled=true] Whether the language is enabled or not
 	 * @memberof Language
+	 * @property {string} [name = theFileName] The name of the language
+	 * @property {boolean} [enabled=true] Whether the language is enabled or not
 	 */
 
 	/**
@@ -21,11 +20,9 @@ class Language {
 	 * @param {KlasaClient} client The Klasa Client
 	 * @param {string} dir The path to the core or user language pieces folder
 	 * @param {Array} file The path from the pieces folder to the finalizer file
-	 * @param {LanguageOptions} [options={}] Optional Language settings
+	 * @param {LanguageOptions} [options = {}] Optional Language settings
 	 */
 	constructor(client, dir, file, options = {}) {
-		options = mergeDefault(client.options.pieceDefaults.languages, options);
-
 		/**
 		 * @since 0.2.1
 		 * @type {KlasaClient}
@@ -65,14 +62,14 @@ class Language {
 		 * @since 0.2.1
 		 * @type {boolean}
 		 */
-		this.enabled = options.enabled;
+		this.enabled = 'enabled' in options ? options.enabled : true;
 	}
 
 	/**
 	 * The method to get language strings
 	 * @since 0.2.1
 	 * @param {string} term The string or function to look up
-	 * @param {...*} args Any arguments to pass to the lookup
+	 * @param {...any} args Any arguments to pass to the lookup
 	 * @returns {string|Function}
 	 */
 	get(term, ...args) {
@@ -92,10 +89,10 @@ class Language {
 	}
 
 	/**
-	 * The init method to be optionally overwritten in actual languages
+	 * The init method to be optionaly overwritten in actual languages
 	 * @since 0.2.1
-	 * @returns {void}
 	 * @abstract
+	 * @returns {void}
 	 */
 	async init() {
 		// Optionally defined in extension Classes

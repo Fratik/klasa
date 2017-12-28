@@ -57,10 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
-.vscode
-package-lock.json
+
+package-lock\.json
 docs
 
 \.vscode/
-\.idea/
-desktop.ini

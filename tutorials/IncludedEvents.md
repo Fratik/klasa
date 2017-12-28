@@ -14,14 +14,6 @@ Replies the reason why the command was inhibited.
 
 [events/commandInhibited.js](https://github.com/dirigeants/klasa/blob/master/src/events/commandInhibited.js)
 
-## configUpdateEntry
-
-Synchronices the user configs between all shards, if the bot is sharded.
-
-**Source:**
-
-[events/configUpdateEntry.js](https://github.com/dirigeants/klasa/blob/master/src/events/configUpdateEntry.js)
-
 ## debug
 
 Re-emits the Discord.js debug event as log event, if enabled. (disabled by default)
@@ -48,7 +40,7 @@ Re-emits the Discord.js debug event as log event, if enabled.
 
 ## guildCreate
 
-Checks if the guild is blacklisted for automatic leaving.
+Creates necessary SettingGateway entries for the new guild.
 
 **Source:**
 
@@ -56,7 +48,7 @@ Checks if the guild is blacklisted for automatic leaving.
 
 ## guildDelete
 
-If `KlasaClientOptions.preserveConfigs` is set to `false` (defaults to `true` if not set), this event deletes entries from the database to free up space.
+Removes SettingGateway entries for the guild.
 
 **Source:**
 
@@ -78,17 +70,9 @@ Runs monitors.
 
 [events/message.js](https://github.com/dirigeants/klasa/blob/master/src/events/message.js)
 
-## messageDelete
-
-If the message ran a command with the property `deletable` set to `true`, this event will delete the response.
-
-**Source:**
-
-[events/messageDelete.js](https://github.com/dirigeants/klasa/blob/master/src/events/messageDelete.js)
-
 ## messageDeleteBulk
 
-Re-emits all the messages deleted to the `messageDelete` event.
+Re-emits each message as a messageDelete, so that any deleted messages which are also cached CommandMessages, will be uncached.
 
 **Source:**
 
@@ -102,30 +86,6 @@ Re-emits if command editing is enabled, and if the content is not the same, to c
 
 [events/messageUpdate.js](https://github.com/dirigeants/klasa/blob/master/src/events/messageUpdate.js)
 
-## monitorError
-
-Handles the errors thrown by any of the monitors.
-
-**Source:**
-
-[events/monitorError.js](https://github.com/dirigeants/klasa/blob/master/src/events/monitorError.js)
-
-## finalizerError
-
-Handles the errors thrown by any of the finalizers.
-
-**Source:**
-
-[events/finalizerError.js](https://github.com/dirigeants/klasa/blob/master/src/events/finalizerError.js)
-
-## verbose
-
-Logs verbose messages to the console.
-
-**Source:**
-
-[events/verbose](https://github.com/dirigeants/klasa/blob/master/src/events/verbose.js)
-
 ## warn
 
 Re-emits the Discord.js debug event as log event, if enabled.
@@ -133,14 +93,6 @@ Re-emits the Discord.js debug event as log event, if enabled.
 **Source:**
 
 [events/warn.js](https://github.com/dirigeants/klasa/blob/master/src/events/warn.js)
-
-## wtf
-
-Stands for '**W**hat a **T**errible **F**ailure'. Logs fatal errors.
-
-**Source:**
-
-[events/wtf](https://github.com/dirigeants/klasa/blob/master/src/events/wtf.js)
 
 ## Further Reading:
 

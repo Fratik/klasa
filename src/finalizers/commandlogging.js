@@ -18,7 +18,7 @@ module.exports = class extends Finalizer {
 
 	run(msg, mes, timer) {
 		this.client.emit('log', [
-			`${msg.command.name}(${msg.args.join(', ')})`,
+			`${msg.cmd.name}(${msg.args.join(', ')})`,
 			msg.reprompted ?
 				this.client.console.messages(`[${timer.stop()}]`, this.colors.prompted.message) :
 				this.client.console.messages(`[${timer.stop()}]`, this.colors.notprompted.message),
@@ -28,7 +28,7 @@ module.exports = class extends Finalizer {
 	}
 
 	init() {
-		this.enabled = this.client.options.cmdLogging;
+		this.enabled = !!this.client.config.cmdLogging;
 	}
 
 	text(msg) {

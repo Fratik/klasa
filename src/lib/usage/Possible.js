@@ -30,21 +30,21 @@ class Possible {
 		 * @since 0.2.1
 		 * @type {?number}
 		 */
-		this.min = minMaxTypes.includes(this.type) && min ? Possible.resolveLimit(min, 'min') : undefined;
+		this.min = minMaxTypes.includes(this.type) && min ? Possible.resolveLimit(min, 'min') : null;
 
 		/**
 		 * The max of this possible
 		 * @since 0.2.1
 		 * @type {?number}
 		 */
-		this.max = minMaxTypes.includes(this.type) && max ? Possible.resolveLimit(max, 'max') : undefined;
+		this.max = minMaxTypes.includes(this.type) && max ? Possible.resolveLimit(max, 'max') : null;
 
 		/**
 		 * The regex of this possible
 		 * @since 0.3.0
 		 * @type {?RegExp}
 		 */
-		this.regex = regexTypes.includes(this.type) && regex ? new RegExp(regex, flags) : undefined;
+		this.regex = regexTypes.includes(this.type) && regex ? new RegExp(regex, flags) : null;
 
 		if (regexTypes.includes(this.type) && !this.regex) throw 'Regex types must include a regular expression';
 	}
@@ -55,7 +55,6 @@ class Possible {
 	 * @param {string} limit The limit to evaluate
 	 * @param {string} type The type of limit
 	 * @returns {number}
-	 * @private
 	 */
 	static resolveLimit(limit, type) {
 		if (isNaN(limit)) throw `${type} must be a number`;

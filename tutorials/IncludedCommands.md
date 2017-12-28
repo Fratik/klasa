@@ -1,6 +1,6 @@
 ## System / conf
 
-Allows authorized members to set per guild configuration.
+Allows authorized members to set per guild settings.
 
 **Source:**
 

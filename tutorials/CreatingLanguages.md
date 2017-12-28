@@ -39,12 +39,9 @@ module.exports = class extends Language {
 
 ## Using Languages:
 
-There are some extendables to help use languages. msg.language is a read-only property that gets a language instance depending on the configuration. At the same time. The method `msg.language.get` is used to get an value from the language package, if it exists, that can accept one or more parameters, being the first one always the key's name, followed by parameters that are used by keys that may have variables. If a key is constant, they're optional.
+There are some extendables to help use languages. msg.language will return the language that is either default (if dms) or the guild's configured language. All languages have a get method, which is used for key lookup and function arg passing.
 
 ```javascript
-msg.language; // Will fetch the configs for the guild if it's in a guild or the default if it's in DMs.
-client.languages.get('en-US'); // Will skip the configs fetch and return the language which name is that one.
-
 msg.language.get('DEFAULT_LANGUAGE'); // returns 'Default Language' in this example, but if the guild has fr-FR as the configured language it would respond 'Langue par défaut'
 msg.language.get('COMMAND_CONF_RESET', 'prefix', '%') // returns 'The key **prefix** has been reset to: \`%\`' in this example, but if the guild has fr-FR as the configured language it would respond 'La clef **prefix** a été réinitialisée à : \`%\`'
 ```
@@ -52,14 +49,14 @@ msg.language.get('COMMAND_CONF_RESET', 'prefix', '%') // returns 'The key **pref
 Additionally, if one language is lagging behind another, the bot will let the user know, and provide the string in the bot's default language as follows:
 
 ```javascript
-msg.language.get('SomeKeyThatExistsOnlyInEnglish');
+msg.language.get('SomeKeyThatExistsOnlyInEnlgish');
 
 // Assuming the bot is configured for fr-FR, the response would be:
 /*
- * `SomeKeyThatExistsOnlyInEnglish n'a pas encore été traduit en 'fr-FR'.
+ *`SomeKeyThatExistsOnlyInEnlgish n'a pas encore été traduit en 'fr-FR'.
  *
- * Langue par défaut:
- * Whatever that key would respond to normally in english.`
+ *Langue par défaut:
+ *Whatever that key would respond to normally in english.`
  */
 ```
 
